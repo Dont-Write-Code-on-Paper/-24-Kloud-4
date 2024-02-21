@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>超手抜きの双六</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <button id="roll-dice" onclick="RollDice()">サイコロをふる</button>
+
+    <div id="player0">0</div>
+    <div id="player1">0</div>
+
+    <script>
+        let player0 = 0;
+        let player1 = 0;
+        let goal = 30;
+
+        let $rollDice = document.getElementById('roll-dice');
+
+        function RollDice() {
+            $rollDice.style.display = 'none';
+
+            let value0 = GetValue();
+            let value1 = GetValue();
+
+            player0 += value0;
+            player1 += value1;
+
+            setTimeout(() => {
+                document.getElementById('player0').innerHTML = `${value0}が出た。${player0}`;
+            }, 1000);
+
+            setTimeout(() => {
+                document.getElementById('player1').innerHTML = `${value1}が出た。${player1}`;
+                $rollDice.style.display = 'block';
+            }, 2000);
+        }
+
+        function GetValue() {
+            return Math.floor(Math.random() * 6) + 1;
+        }
+    </script>
+
+</body>
+
+</html>
