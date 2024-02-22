@@ -13,7 +13,7 @@ const createSquares = () => {
         square.removeAttribute("id");
         stage.appendChild(square);
 
-        const stone = square.querySelector('.stone'); b
+        const stone = square.querySelector('.stone');
 
         let defaultState;
         if (i == 0) {
