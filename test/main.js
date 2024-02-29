@@ -1,3 +1,7 @@
+/*
+このコード動きません。
+*/
+
 const stage = document.getElementById("stage");
 const squareTemplate = document.getElementById("square-template");
 
@@ -35,12 +39,12 @@ window.onload = () => {
 
 
 BUTTON_CLICK_EVENT.addEventListener('click', () => {
-    var random = Math.floor(Math.random() * 7) + 1;
-    stoneStateList[sum] = 0;
+    var random = Math.floor(Math.random() * 7) + 1; //ランダムで1-6の目を出す
+    stoneStateList[sum] = 0; //さっきまで駒があった位置を非表示にする
 
-    sum += random;
-    if (sum == 9) {
-        ;
+    sum += random; //ランダムで出た数だけ駒を進める
+    if (sum == 9) { // 10マス目(配列9番)まで来たときの処理
+        //ここにコードあったはず(消しちゃった)
         stoneStateList[sum] = 1;
         alert("Done!");
     } else {
