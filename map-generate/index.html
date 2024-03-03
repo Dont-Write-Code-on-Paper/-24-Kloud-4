@@ -148,7 +148,7 @@
         { minZoom: 16, maxNativeZoom: 16, maxZoom: 18 },
         {
           style: function () {
-            return { "color": "#0000ff", "weight": 2 };
+            return { "color": "#0000ff", "weight": 0 };
           },
           onEachFeature: function (feature, layer) {
             //経路探索時の重みとして経路長さを使用
@@ -167,9 +167,9 @@
       );
 
       //地理院地図レイヤ
-      var pale = L.tileLayer(
-        'http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-        { attribution: "地理院タイル（淡色地図）", maxZoom: 18, opacity: 1 });
+      var pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+        attribution: "地理院タイル", maxZoom: 18, opacity: 1
+      });
 
       //始点、終点マーカーレイヤ
       var startlayer = L.geoJson({
