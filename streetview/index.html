@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ストリートビュー埋め込みテスト</title>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="./lib/TileLayer.GeoJSON.js"></script>
+  <script src="./lib/turf.min.js"></script>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    html,
+    body,
+    #mapdiv {
+      height: 80%;
+      width: 100%;
+    }
+
+    .leaflet-container {
+      background: #fff;
+    }
+
+    .gsi-div-icon {
+      background: none;
+      white-space: nowrap;
+      border: none;
+    }
+
+    #pano {
+      float: left;
+      height: 80%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="pano"></div>
+  <script>
+    const panoEle = document.getElementById('pano');
+    var panorama = null;
+    function initialize() {
+      var location = { lat: 43.771179, lng: 142.368805 }//東京タワー
+      // StreetView
+      panorama = new google.maps.StreetViewPanorama(panoEle, {
+        position: location,
+        pov: {
+          heading: 34,
+          pitch: 10
+        }
+      });
+    };
+  </script>
+  <script defer
+    src="https://maps.googleapis.com/maps/api/js?key={ API_KEY }&callback=initialize"></script>
+
+  <div id="mapdiv">
+    <script>
+      var markerDragEnd = function (e) {
+        var coordinate = pointlayer.getLayers()[0].toGeoJSON().geometry.coordinates;
+        // street viewの座標更新
+        panorama.setPosition({ lat: coordinate[1], lng: coordinate[0] });
+      };
+
+      //地理院地図レイヤ
+      var pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+        attribution: "地理院タイル", maxZoom: 18, opacity: 1
+      });
+
+      //マーカーレイヤ
+      var pointlayer = L.geoJson({
+        type: "FeatureCollection",
+        features: [{
+          type: "Feature",
+          geometry: { "type": "Point", "coordinates": [142.368805, 43.771179] },
+          properties: {}
+        }]
+      }, {
+        pointToLayer: function (feature, latlng) { return L.marker(latlng); },
+        onEachFeature: function (feature, layer) {
+          layer.options.draggable = true;
+          layer.on('dragend', function (e) { markerDragEnd(e); });
+        }
+      });
+
+      var map = L.map("mapdiv", {
+        center: [43.771179, 142.368805], zoom: 16, minZoom: 5, maxZoom: 18,
+        layers: [pale, pointlayer]
+      });
+
+    </script>
+  </div>
+</body>
+
+</html>
