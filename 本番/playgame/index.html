@@ -39,19 +39,21 @@
 </head>
 
 <body>
-    <div id="mapdiv"> </div>
+    <div id="mapdiv"></div>
+    <button onclick="diceroll()">ダイスを振る</button>
+    <div id="history"></div>
     <script>
         let url = new URL(window.location.href);
         let mapdata = JSON.parse(url.searchParams.get('mapdata'));
         console.log(mapdata);
 
         //地理院地図レイヤ
-        var pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+        let pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
             attribution: "地理院タイル", maxZoom: 18, opacity: 1
         });
 
         //始点、終点マーカーレイヤ
-        var startlayer = L.geoJson({
+        let startlayer = L.geoJson({
             type: "FeatureCollection",
             features: [{
                 type: "Feature",
@@ -70,7 +72,7 @@
             }
         });
 
-        var goallayer = L.geoJson({
+        let goallayer = L.geoJson({
             type: "FeatureCollection",
             features: [{
                 type: "Feature",
@@ -89,7 +91,7 @@
             }
         });
 
-        var gamemaplayer = L.geoJson({
+        let gamemaplayer = L.geoJson({
             type: "FeatureCollection",
             features: []
         }, {
@@ -112,9 +114,81 @@
             })
         });
 
-        var map = L.map("mapdiv", {
+        let road_edge_layer = L.geoJson(null, {
+            style: function () { return { "color": "#ffffff", "weight": 21, "opacity": 1, "lineCap": "butt", }; },
+            clickable: false
+        });
+        let road_main_layer = L.geoJson(null, {
+            style: function () { return { "color": "#808080", "weight": 13, "opacity": 1, "lineCap": "butt", }; },
+            clickable: false
+        });
+        let road_center_line_layer = L.geoJson(null, {
+            style: function () { return { "color": "#ffffff", "weight": 5, "opacity": 1, "lineCap": "butt", "dashArray": "10 9" }; },
+            clickable: false
+        });
+
+        let f = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [mapdata.start, mapdata.map[0]]
+            },
+            "properties": {}
+        }
+        road_edge_layer.addData(f);
+        road_main_layer.addData(f);
+        road_center_line_layer.addData(f);
+        for (let i = 0; i < mapdata.map.length - 1; i++) {
+            f.geometry.coordinates = [mapdata.map[i], mapdata.map[i + 1]]
+            road_edge_layer.addData(f);
+            road_main_layer.addData(f);
+            road_center_line_layer.addData(f);
+        }
+        f.geometry.coordinates = [mapdata.map[mapdata.map.length - 1], mapdata.goal]
+        road_edge_layer.addData(f);
+        road_main_layer.addData(f);
+        road_center_line_layer.addData(f);
+
+        let playerlayer = L.geoJson({
+            type: "FeatureCollection",
+            features: []
+        }, {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "./icon/human.png",
+                        iconsize: [100, 100],
+                        iconAnchor: [25, 50]
+                    })
+                });
+            }
+        });
+
+        let now = 0;
+        let c = mapdata.start;
+        playerlayer.addData({
+            type: "Feature",
+            geometry: { "type": "Point", "coordinates": c },
+            properties: {}
+        })
+        function diceroll(e) {
+            playerlayer.clearLayers();
+            now += Math.floor(Math.random() * 7);
+            if (now > mapdata.mapsize) {
+                c = mapdata.goal;
+            } else {
+                c = mapdata.map[now - 1];
+            }
+            playerlayer.addData({
+                type: "Feature",
+                geometry: { "type": "Point", "coordinates": c },
+                properties: {}
+            })
+        }
+
+        let map = L.map("mapdiv", {
             center: [mapdata.start[1], mapdata.start[0]], zoom: 16, minZoom: 16, maxZoom: 18,
-            layers: [pale, startlayer, goallayer, gamemaplayer]
+            layers: [pale, startlayer, goallayer, gamemaplayer, playerlayer, road_edge_layer, road_main_layer, road_center_line_layer]
         });
     </script>
 </body>
