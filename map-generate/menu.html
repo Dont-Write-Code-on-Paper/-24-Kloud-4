@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header__container">
+            <button type="button" class="hamburger">
+                <span></span>
+            </button>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="/">home</a></li>
+                    <li class="nav__item"><a href="#">最初からやり直す</a></li>
+                    <li class="nav__item"><a href="#">ゲームをやめる</a></li>
+                    <li class="nav__item"><a href="#">設定</a></li>
+                </ul>
+            </nav>
+
+        </div>
+    </header>
+    <div class="description">
+        <h1 class="title">地元deすごろく</h1>
+        <div class="menu">
+
+        </div>
+    </div>
+</body>
+
+<script>
+    "use strict";
+    {
+        const hamburger = document.querySelector('.hamburger');
+        const nav = document.querySelector('.nav');
+
+        hamburger.addEventListener('click', function () {
+            hamburger.classList.toggle('open');
+            nav.classList.toggle('open');
+        });
+    }
+</script>
+
+<style>
+    @charset "utf-8";
+    @import url('https://fonts.googleapis.com/css2?family=Encode+Sans:wght@100..900&display=swap');
+
+    body {
+        font-family: "Encode Sans", sans-serif;
+    }
+
+    ul {
+        padding-left: 0;
+    }
+
+    li {
+        list-style: none;
+    }
+
+
+    .description {
+        width: 400px;
+        height: 200px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -150px;
+        margin-top: -100px;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 50px;
+    }
+
+    /*ハンバーガー*/
+    .hamburger {
+        width: 50px;
+        height: 80px;
+        position: relative;
+        appearance: none;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    .hamburger span,
+    .hamburger span::after,
+    .hamburger span::before {
+        position: absolute;
+        display: block;
+        content: "";
+        width: 100%;
+        height: 2px;
+        background-color: #202124;
+        transition: all 0.5s;
+    }
+
+    .hamburger span::before {
+        top: -10px;
+    }
+
+    .hamburger span::after {
+        bottom: -10px;
+    }
+
+    .hamburger.open span {
+        background-color: transparent;
+    }
+
+    .hamburger.open span::before {
+        top: 0;
+        transform: rotate(45deg);
+    }
+
+    .hamburger.open span::after {
+        bottom: 0;
+        transform: rotate(-45deg);
+    }
+
+
+    /*ハンバーガーメニュー*/
+    .nav {
+        position: fixed;
+        width: 25%;
+        height: 100vh;
+        top: 80px;
+        left: -50%;
+        background-color: #5353536e;
+        padding: 50px 0;
+        transition: all 0.5s;
+    }
+
+    .nav__item a {
+        display: block;
+        font-size: 20px;
+        color: #202124;
+        text-decoration: none;
+        padding: 20px 0 20px 20px;
+    }
+
+    .nav__item a:hover {
+        color: #fff;
+        background-color: #5353536e;
+    }
+
+    .nav.open {
+        left: 0;
+    }
+</style>
+
+</html>
