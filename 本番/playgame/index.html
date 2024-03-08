@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>じもすご - 地元ですごろく</title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="./lib/TileLayer.GeoJSON.js"></script>
+    <script src="./lib/turf.min.js"></script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body,
+        #mapdiv {
+            height: 90%;
+            width: 95%;
+        }
+
+        #mapdiv {
+            margin: 5%;
+        }
+
+        .leaflet-container {
+            background: #fff;
+        }
+
+        .gsi-div-icon {
+            background: none;
+            white-space: nowrap;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mapdiv"> </div>
+    <script>
+        let url = new URL(window.location.href);
+        let mapdata = JSON.parse(url.searchParams.get('mapdata'));
+        console.log(mapdata);
+
+        //地理院地図レイヤ
+        var pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
+            attribution: "地理院タイル", maxZoom: 18, opacity: 1
+        });
+
+        //始点、終点マーカーレイヤ
+        var startlayer = L.geoJson({
+            type: "FeatureCollection",
+            features: [{
+                type: "Feature",
+                geometry: { "type": "Point", "coordinates": mapdata.start },
+                properties: {}
+            }]
+        }, {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "./icon/start.png",
+                        iconsize: [40, 40],
+                        iconAnchor: [25, 50]
+                    })
+                });
+            }
+        });
+
+        var goallayer = L.geoJson({
+            type: "FeatureCollection",
+            features: [{
+                type: "Feature",
+                geometry: { "type": "Point", "coordinates": mapdata.goal },
+                properties: {}
+            }]
+        }, {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "./icon/goal.png",
+                        iconsize: [40, 40],
+                        iconAnchor: [25, 50]
+                    })
+                });
+            }
+        });
+
+        var gamemaplayer = L.geoJson({
+            type: "FeatureCollection",
+            features: []
+        }, {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "./icon/space.png",
+                        iconsize: [40, 40],
+                        iconAnchor: [25, 50]
+                    })
+                });
+            }
+        });
+
+        mapdata.map.forEach(i => {
+            gamemaplayer.addData({
+                type: "Feature",
+                geometry: { "type": "Point", "coordinates": i },
+                properties: {}
+            })
+        });
+
+        var map = L.map("mapdiv", {
+            center: [mapdata.start[1], mapdata.start[0]], zoom: 16, minZoom: 16, maxZoom: 18,
+            layers: [pale, startlayer, goallayer, gamemaplayer]
+        });
+    </script>
+</body>
+
+</html>
