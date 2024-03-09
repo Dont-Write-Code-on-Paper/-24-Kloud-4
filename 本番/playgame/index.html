@@ -45,7 +45,6 @@
     <script>
         let url = new URL(window.location.href);
         let mapdata = JSON.parse(url.searchParams.get('mapdata'));
-        console.log(mapdata);
 
         //地理院地図レイヤ
         let pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
@@ -64,9 +63,9 @@
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon: L.icon({
-                        iconUrl: "./icon/start.png",
-                        iconsize: [40, 40],
-                        iconAnchor: [25, 50]
+                        iconUrl: "../images/start.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20]
                     })
                 });
             }
@@ -83,9 +82,9 @@
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon: L.icon({
-                        iconUrl: "./icon/goal.png",
-                        iconsize: [40, 40],
-                        iconAnchor: [25, 50]
+                        iconUrl: "../images/goal.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20]
                     })
                 });
             }
@@ -98,9 +97,9 @@
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon: L.icon({
-                        iconUrl: "./icon/space.png",
-                        iconsize: [40, 40],
-                        iconAnchor: [25, 50]
+                        iconUrl: "../images/point.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20]
                     })
                 });
             }
@@ -115,11 +114,11 @@
         });
 
         let road_edge_layer = L.geoJson(null, {
-            style: function () { return { "color": "#ffffff", "weight": 21, "opacity": 1, "lineCap": "butt", }; },
+            style: function () { return { "color": "#ffffff", "weight": 31, "opacity": 1, "lineCap": "butt", }; },
             clickable: false
         });
         let road_main_layer = L.geoJson(null, {
-            style: function () { return { "color": "#808080", "weight": 13, "opacity": 1, "lineCap": "butt", }; },
+            style: function () { return { "color": "#808080", "weight": 21, "opacity": 1, "lineCap": "butt", }; },
             clickable: false
         });
         let road_center_line_layer = L.geoJson(null, {
@@ -157,8 +156,8 @@
                 return L.marker(latlng, {
                     icon: L.icon({
                         iconUrl: "./icon/human.png",
-                        iconsize: [100, 100],
-                        iconAnchor: [25, 50]
+                        iconSize: [50, 50],
+                        iconAnchor: [25, 30]
                     })
                 });
             }
@@ -184,6 +183,7 @@
                 geometry: { "type": "Point", "coordinates": c },
                 properties: {}
             })
+            map.setView([c[1], c[0]]);
         }
 
         let map = L.map("mapdiv", {
