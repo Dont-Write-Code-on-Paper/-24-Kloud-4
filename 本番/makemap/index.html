@@ -40,8 +40,21 @@
 </head>
 
 <body>
-  <input type="text" value=8 id="mapsize" />
-  <div id="mapdiv"> </div>
+  <select id="mapsize">
+    <option value="3">2~4マス デバッグ用</option>
+    <option value="8">6~10マス すぐ終わる</option>
+    <option value="15">10~20マス 普通</option>
+    <option value="100">100マスぐらい 飽きるぐらい長い</option>
+  </select>
+  <select id="playernum">
+    <option value="1">1人プレイ</option>
+    <option value="2">2人プレイ</option>
+    <option value="3">3人プレイ</option>
+    <option value="4">4人プレイ</option>
+  </select>
+  <!-- mapdiv内に地図が入ってます。 -->
+  <!-- ここの余白やら配置やらををいい感じに調整して下さい。 -->
+  <div id="mapdiv"> </div> 
   <button onclick="playgame()">このマップを遊ぶ！</button>
 
   <script>
@@ -257,9 +270,9 @@
         pointCoodinates.push(i.toGeoJSON().geometry.coordinates);
       });
       mapdata.map = pointCoodinates;
+      mapdata.playernum = Number(document.getElementById("playernum").value);
       let url = "../playgame/index.html?mapdata=" + JSON.stringify(mapdata);
       location.href = url;
-      // console.log(url);
     }
   </script>
 </body>

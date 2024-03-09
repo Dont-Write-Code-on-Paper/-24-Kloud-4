@@ -18,12 +18,8 @@
         html,
         body,
         #mapdiv {
-            height: 90%;
-            width: 95%;
-        }
-
-        #mapdiv {
-            margin: 5%;
+            height: 75%;
+            width: 100%;
         }
 
         .leaflet-container {
@@ -38,16 +34,16 @@
 
         #pano {
             float: left;
-            height: 80%;
+            height: 75%;
             width: 100%;
         }
     </style>
 </head>
 
 <body>
-    <div id="mapdiv"></div>
     <button onclick="diceroll()">ダイスを振る</button>
-    <div id="history"></div>
+    <div id="mapdiv"></div>
+    <!-- panoがstreetviewの入っているdiv要素です。これもmapdivと同じように余白類調整してください。 -->
     <div id="pano"></div>
 
     <script>
@@ -201,15 +197,12 @@
             center: [mapdata.start[1], mapdata.start[0]], zoom: 16, minZoom: 16, maxZoom: 18,
             layers: [pale, startlayer, goallayer, gamemaplayer, playerlayer, road_edge_layer, road_main_layer, road_center_line_layer]
         });
-    </script>
-    <script>
+
         const panoEle = document.getElementById('pano');
         var panorama = null;
         function initialize() {
-            var location = { lat: 43.771179, lng: 142.368805 }//東京タワー
-            // StreetView
             panorama = new google.maps.StreetViewPanorama(panoEle, {
-                position: location,
+                position: { lat: mapdata.start[1], lng: mapdata.start[0] },
                 pov: {
                     heading: 34,
                     pitch: 10
@@ -217,7 +210,8 @@
             });
         };
     </script>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key={ API_KEY }&callback=initialize"></script>
+    <script defer
+        src="https://maps.googleapis.com/maps/api/js?key={API_KEY}&callback=initialize"></script>
 
 </body>
 
