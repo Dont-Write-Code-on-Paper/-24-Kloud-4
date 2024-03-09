@@ -7,9 +7,9 @@
   <title>じもすご - 地元ですごろく</title>
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-  <script src="./lib/TileLayer.GeoJSON.js"></script>
-  <script src="./lib/turf.min.js"></script>
-  <script src="./lib/dijkstra/graph.js"></script>
+  <script src="../lib/TileLayer.GeoJSON.js"></script>
+  <script src="../lib/turf.min.js"></script>
+  <script src="../lib/dijkstra/graph.js"></script>
   <style>
     body {
       padding: 0;
@@ -189,9 +189,9 @@
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
           icon: L.icon({
-            iconUrl: "./icon/start.png",
-            iconsize: [40, 40],
-            iconAnchor: [25, 50]
+            iconUrl: "../images/start.png",
+            iconSize: [40, 40],
+            iconAnchor: [20, 20]
           })
         });
       },
@@ -212,9 +212,9 @@
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
           icon: L.icon({
-            iconUrl: "./icon/goal.png",
-            iconsize: [40, 40],
-            iconAnchor: [25, 50]
+            iconUrl: "../images/goal.png",
+            iconSize: [40, 40],
+            iconAnchor: [20, 20]
           })
         });
       },
@@ -231,9 +231,9 @@
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
           icon: L.icon({
-            iconUrl: "./icon/space.png",
-            iconsize: [40, 40],
-            iconAnchor: [25, 50]
+            iconUrl: "../images/point.png",
+            iconSize: [40, 40],
+            iconAnchor: [20, 20]
           })
         });
       }
