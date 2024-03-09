@@ -35,6 +35,12 @@
             white-space: nowrap;
             border: none;
         }
+
+        #pano {
+            float: left;
+            height: 80%;
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -42,6 +48,8 @@
     <div id="mapdiv"></div>
     <button onclick="diceroll()">ダイスを振る</button>
     <div id="history"></div>
+    <div id="pano"></div>
+
     <script>
         let url = new URL(window.location.href);
         let mapdata = JSON.parse(url.searchParams.get('mapdata'));
@@ -153,13 +161,15 @@
             features: []
         }, {
             pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, {
-                    icon: L.icon({
-                        iconUrl: "./icon/human.png",
-                        iconSize: [50, 50],
-                        iconAnchor: [25, 30]
-                    })
-                });
+                return L.marker(latlng
+                    // , {
+                    //     icon: L.icon({
+                    //         iconUrl: "./icon/human.png",
+                    //         iconSize: [50, 50],
+                    //         iconAnchor: [25, 30]
+                    //     })
+                    // }
+                );
             }
         });
 
@@ -184,6 +194,7 @@
                 properties: {}
             })
             map.setView([c[1], c[0]]);
+            panorama.setPosition({ lat: c[1], lng: c[0] });
         }
 
         let map = L.map("mapdiv", {
@@ -191,6 +202,23 @@
             layers: [pale, startlayer, goallayer, gamemaplayer, playerlayer, road_edge_layer, road_main_layer, road_center_line_layer]
         });
     </script>
+    <script>
+        const panoEle = document.getElementById('pano');
+        var panorama = null;
+        function initialize() {
+            var location = { lat: 43.771179, lng: 142.368805 }//東京タワー
+            // StreetView
+            panorama = new google.maps.StreetViewPanorama(panoEle, {
+                position: location,
+                pov: {
+                    heading: 34,
+                    pitch: 10
+                }
+            });
+        };
+    </script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key={ API_KEY }&callback=initialize"></script>
+
 </body>
 
 </html>
