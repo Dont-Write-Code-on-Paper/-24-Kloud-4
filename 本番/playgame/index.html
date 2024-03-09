@@ -7,8 +7,8 @@
     <title>じもすご - 地元ですごろく</title>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-    <script src="./lib/TileLayer.GeoJSON.js"></script>
-    <script src="./lib/turf.min.js"></script>
+    <script src="../lib/TileLayer.GeoJSON.js"></script>
+    <script src="../lib/turf.min.js"></script>
     <style>
         body {
             padding: 0;
@@ -18,12 +18,8 @@
         html,
         body,
         #mapdiv {
-            height: 90%;
-            width: 95%;
-        }
-
-        #mapdiv {
-            margin: 5%;
+            height: 75%;
+            width: 100%;
         }
 
         .leaflet-container {
@@ -35,17 +31,24 @@
             white-space: nowrap;
             border: none;
         }
+
+        #pano {
+            float: left;
+            height: 75%;
+            width: 100%;
+        }
     </style>
 </head>
 
 <body>
-    <div id="mapdiv"></div>
     <button onclick="diceroll()">ダイスを振る</button>
-    <div id="history"></div>
+    <div id="mapdiv"></div>
+    <!-- panoがstreetviewの入っているdiv要素です。これもmapdivと同じように余白類調整してください。 -->
+    <div id="pano"></div>
+
     <script>
         let url = new URL(window.location.href);
         let mapdata = JSON.parse(url.searchParams.get('mapdata'));
-        console.log(mapdata);
 
         //地理院地図レイヤ
         let pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
@@ -64,9 +67,9 @@
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon: L.icon({
-                        iconUrl: "./icon/start.png",
-                        iconsize: [40, 40],
-                        iconAnchor: [25, 50]
+                        iconUrl: "../images/start.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20]
                     })
                 });
             }
@@ -83,9 +86,9 @@
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon: L.icon({
-                        iconUrl: "./icon/goal.png",
-                        iconsize: [40, 40],
-                        iconAnchor: [25, 50]
+                        iconUrl: "../images/goal.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20]
                     })
                 });
             }
@@ -98,9 +101,9 @@
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon: L.icon({
-                        iconUrl: "./icon/space.png",
-                        iconsize: [40, 40],
-                        iconAnchor: [25, 50]
+                        iconUrl: "../images/point.png",
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20]
                     })
                 });
             }
@@ -115,11 +118,11 @@
         });
 
         let road_edge_layer = L.geoJson(null, {
-            style: function () { return { "color": "#ffffff", "weight": 21, "opacity": 1, "lineCap": "butt", }; },
+            style: function () { return { "color": "#ffffff", "weight": 31, "opacity": 1, "lineCap": "butt", }; },
             clickable: false
         });
         let road_main_layer = L.geoJson(null, {
-            style: function () { return { "color": "#808080", "weight": 13, "opacity": 1, "lineCap": "butt", }; },
+            style: function () { return { "color": "#808080", "weight": 21, "opacity": 1, "lineCap": "butt", }; },
             clickable: false
         });
         let road_center_line_layer = L.geoJson(null, {
@@ -154,13 +157,15 @@
             features: []
         }, {
             pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, {
-                    icon: L.icon({
-                        iconUrl: "./icon/human.png",
-                        iconsize: [100, 100],
-                        iconAnchor: [25, 50]
-                    })
-                });
+                return L.marker(latlng
+                    // , {
+                    //     icon: L.icon({
+                    //         iconUrl: "./icon/human.png",
+                    //         iconSize: [50, 50],
+                    //         iconAnchor: [25, 30]
+                    //     })
+                    // }
+                );
             }
         });
 
@@ -184,13 +189,30 @@
                 geometry: { "type": "Point", "coordinates": c },
                 properties: {}
             })
+            map.setView([c[1], c[0]]);
+            panorama.setPosition({ lat: c[1], lng: c[0] });
         }
 
         let map = L.map("mapdiv", {
             center: [mapdata.start[1], mapdata.start[0]], zoom: 16, minZoom: 16, maxZoom: 18,
             layers: [pale, startlayer, goallayer, gamemaplayer, playerlayer, road_edge_layer, road_main_layer, road_center_line_layer]
         });
+
+        const panoEle = document.getElementById('pano');
+        var panorama = null;
+        function initialize() {
+            panorama = new google.maps.StreetViewPanorama(panoEle, {
+                position: { lat: mapdata.start[1], lng: mapdata.start[0] },
+                pov: {
+                    heading: 34,
+                    pitch: 10
+                }
+            });
+        };
     </script>
+    <script defer
+        src="https://maps.googleapis.com/maps/api/js?key={API_KEY}&callback=initialize"></script>
+
 </body>
 
 </html>
