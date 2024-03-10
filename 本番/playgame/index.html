@@ -16,9 +16,8 @@
         }
 
         html,
-        body,
-        #mapdiv {
-            height: 75%;
+        body {
+            height: 100%;
             width: 100%;
         }
 
@@ -32,19 +31,42 @@
             border: none;
         }
 
-        #pano {
+        #mapdiv {
             float: left;
-            height: 75%;
+            height: 100%;
+            width: 70%;
+        }
+
+        #info {
+            float: left;
+            height: 100%;
+            width: 30%;
+        }
+
+        #history {
+            height: 40%;
+            width: 100%;
+            overflow-y: scroll;
+        }
+
+        #pano {
+            height: 50%;
             width: 100%;
         }
     </style>
 </head>
 
 <body>
-    <button onclick="diceroll()">ダイスを振る</button>
     <div id="mapdiv"></div>
     <!-- panoがstreetviewの入っているdiv要素です。これもmapdivと同じように余白類調整してください。 -->
-    <div id="pano"></div>
+    <div id="info">
+        <button onclick="diceroll()">ダイスを振る</button>
+        <div id="turn">プレイヤー1の番です。</div>
+        <div id="history">
+
+        </div>
+        <div id="pano"></div>
+    </div>
 
     <script>
         let url = new URL(window.location.href);
@@ -67,7 +89,7 @@
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon: L.icon({
-                        iconUrl: "../images/start.png",
+                        iconUrl: "../images/points/start.png",
                         iconSize: [40, 40],
                         iconAnchor: [20, 20]
                     })
@@ -86,7 +108,7 @@
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon: L.icon({
-                        iconUrl: "../images/goal.png",
+                        iconUrl: "../images/points/goal.png",
                         iconSize: [40, 40],
                         iconAnchor: [20, 20]
                     })
@@ -101,7 +123,7 @@
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon: L.icon({
-                        iconUrl: "../images/point.png",
+                        iconUrl: "../images/points/point.png",
                         iconSize: [40, 40],
                         iconAnchor: [20, 20]
                     })
@@ -152,50 +174,102 @@
         road_main_layer.addData(f);
         road_center_line_layer.addData(f);
 
-        let playerlayer = L.geoJson({
+        let redplayerlayer = L.geoJson({
             type: "FeatureCollection",
             features: []
         }, {
             pointToLayer: function (feature, latlng) {
-                return L.marker(latlng
-                    // , {
-                    //     icon: L.icon({
-                    //         iconUrl: "./icon/human.png",
-                    //         iconSize: [50, 50],
-                    //         iconAnchor: [25, 30]
-                    //     })
-                    // }
-                );
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "../images/players/red.png",
+                        iconSize: [30, 50],
+                        iconAnchor: [12, 40]
+                    })
+                });
+            }
+        });
+        let greenplayerlayer = L.geoJson({
+            type: "FeatureCollection",
+            features: []
+        }, {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "../images/players/green.png",
+                        iconSize: [30, 50],
+                        iconAnchor: [16, 40]
+                    })
+                });
+            }
+        });
+        let blueplayerlayer = L.geoJson({
+            type: "FeatureCollection",
+            features: []
+        }, {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "../images/players/blue.png",
+                        iconSize: [30, 50],
+                        iconAnchor: [14, 38]
+                    })
+                });
+            }
+        });
+        let yellowplayerlayer = L.geoJson({
+            type: "FeatureCollection",
+            features: []
+        }, {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "../images/players/yellow.png",
+                        iconSize: [30, 50],
+                        iconAnchor: [18, 38]
+                    })
+                });
             }
         });
 
-        let now = 0;
+        let players = [redplayerlayer, blueplayerlayer, greenplayerlayer, yellowplayerlayer];
+        let pos = [0, 0, 0, 0];
         let c = mapdata.start;
-        playerlayer.addData({
-            type: "Feature",
-            geometry: { "type": "Point", "coordinates": c },
-            properties: {}
-        })
+        for (let i = 0; i < mapdata.playernum; i++) {
+            players[i].addData({
+                type: "Feature",
+                geometry: { "type": "Point", "coordinates": c },
+                properties: {}
+            })
+        }
+
+        let turn = 0;
+        let turndisplay = document.getElementById("turn");
+        let history = document.getElementById("history");
         function diceroll(e) {
-            playerlayer.clearLayers();
-            now += Math.floor(Math.random() * 7);
-            if (now > mapdata.mapsize) {
+            players[turn].clearLayers();
+            let n = Math.floor(Math.random() * 6) + 1
+            pos[turn] += n;
+            history.innerHTML += "プレイヤー" + (turn + 1) + "が" + n + "を出しました。<br>";
+            if (pos[turn] > mapdata.mapsize) {
                 c = mapdata.goal;
+                history.innerHTML += "プレイヤー" + (turn + 1) + "がゴールしました。<br>";
             } else {
-                c = mapdata.map[now - 1];
+                c = mapdata.map[pos[turn] - 1];
             }
-            playerlayer.addData({
+            players[turn].addData({
                 type: "Feature",
                 geometry: { "type": "Point", "coordinates": c },
                 properties: {}
             })
             map.setView([c[1], c[0]]);
             panorama.setPosition({ lat: c[1], lng: c[0] });
+            turn = (turn + 1) % mapdata.playernum;
+            turndisplay.innerText = "プレイヤー" + (turn + 1) + "の番です。";
         }
 
         let map = L.map("mapdiv", {
             center: [mapdata.start[1], mapdata.start[0]], zoom: 16, minZoom: 16, maxZoom: 18,
-            layers: [pale, startlayer, goallayer, gamemaplayer, playerlayer, road_edge_layer, road_main_layer, road_center_line_layer]
+            layers: [pale, startlayer, goallayer, gamemaplayer, redplayerlayer, blueplayerlayer, greenplayerlayer, yellowplayerlayer, road_edge_layer, road_main_layer, road_center_line_layer]
         });
 
         const panoEle = document.getElementById('pano');
@@ -211,7 +285,7 @@
         };
     </script>
     <script defer
-        src="https://maps.googleapis.com/maps/api/js?key={API_KEY}&callback=initialize"></script>
+        src="https://maps.googleapis.com/maps/api/js?key={ API_KEY }&callback=initialize"></script>
 
 </body>
 
