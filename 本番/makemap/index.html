@@ -54,7 +54,7 @@
   </select>
   <!-- mapdiv内に地図が入ってます。 -->
   <!-- ここの余白やら配置やらををいい感じに調整して下さい。 -->
-  <div id="mapdiv"> </div> 
+  <div id="mapdiv"> </div>
   <button onclick="playgame()">このマップを遊ぶ！</button>
 
   <script>
@@ -253,8 +253,56 @@
     });
 
     var map = L.map("mapdiv", {
-      center: [43.771179, 142.368805], zoom: 16, minZoom: 16, maxZoom: 18,
+      center: [43.771179, 142.368805], zoom: 16, minZoom: 5, maxZoom: 18,
       layers: [pale, rdcllayer, startlayer, goallayer, gamemaplayer, shortestpathlayer]
+    });
+
+    let popup;
+    map.on('click', function (e) {
+      if (popup) {
+        map.removeLayer(popup);
+      }
+      popup = L.marker(e.latlng).on('click', function (e) {
+        if (map.getZoom() < 16) {
+          return;
+        }
+        startlayer.clearLayers();
+        goallayer.clearLayers();
+        startlayer.addData({
+          type: "Feature",
+          geometry: { "type": "Point", "coordinates": [e.latlng.lng, e.latlng.lat] },
+          properties: {}
+        });
+        goallayer.addData({
+          type: "Feature",
+          geometry: { "type": "Point", "coordinates": [e.latlng.lng + 0.0001, e.latlng.lat + 0.0001] },
+          properties: {}
+        });
+        markerDragEnd(e);
+        map.removeLayer(popup);
+      }).addTo(map);
+    });
+
+    map.on('zoomend', function (e) {
+      if (map.getZoom() < 16) {
+        if (map.hasLayer(rdcllayer)) {
+          shortestpathlayer.clearLayers();
+          map.removeLayer(startlayer);
+          map.removeLayer(goallayer);
+          map.removeLayer(gamemaplayer);
+          map.removeLayer(rdcllayer);
+        }
+      } else {
+        if (!map.hasLayer(rdcllayer)) {
+          startlayer.addTo(map);
+          goallayer.addTo(map);
+          gamemaplayer.addTo(map);
+          startlayer.clearLayers();
+          goallayer.clearLayers();
+          gamemaplayer.clearLayers();
+          rdcllayer.addTo(map);
+        }
+      }
     });
 
     function playgame() {
