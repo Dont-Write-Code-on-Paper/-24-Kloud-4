@@ -15,7 +15,7 @@
             </button>
             <nav class="nav">
                 <ul class="nav__list">
-                    <li class="nav__item"><a href="/">home</a></li>
+                    <li class="nav__item"><a href="/">ホーム</a></li>
                     <li class="nav__item"><a href="#">最初からやり直す</a></li>
                     <li class="nav__item"><a href="#">ゲームをやめる</a></li>
                     <li class="nav__item"><a href="#">設定</a></li>
@@ -27,7 +27,7 @@
     <div class="description">
         <h1 class="title">地元deすごろく</h1>
         <div class="menu">
-            <button onclick="location.href='./makemap/index.html'">ゲームを遊ぶ！</button>
+            <button class="startbutton" onclick="location.href='./makemap/index.html'">ゲームを遊ぶ！</button>
         </div>
     </div>
 
@@ -52,6 +52,7 @@
 
     body {
         font-family: "Kosugi", sans-serif;
+        background-color: skyblue;
     }
 
     ul {
@@ -76,19 +77,41 @@
     .title {
         text-align: center;
         font-size: 50px;
-        color: #008000;
+        color: #ff8080;
+    }
+
+    .startbutton {
+        display: block;
+        text-align: center;
+        color: #313131;
+
+        font-size: 20px;
+        height: 40px;
+        border-radius: 20px;
+        border: 3px solid #313131;
+        width: 200px;
+        margin: 50px auto;
+        padding: 5px 0;
+
+        text-decoration: none;
+    }
+    .startbutton:hover{
+        background-color: #c9c9c9; 
+
+        text-decoration: none; /* リンクに出てくる下線を無効にする*/    
     }
 
     /*ハンバーガー*/
     .hamburger {
         width: 50px;
-        height: 80px;
+        height: 50px;
         position: relative;
         appearance: none;
         border: 0;
         padding: 0;
         margin: 0;
         cursor: pointer;
+        background-color: skyblue;
     }
 
     .hamburger span,
@@ -133,7 +156,7 @@
         height: 100vh;
         top: 80px;
         left: -50%;
-        background-color: #5353536e;
+        background-color: #40404080;
         padding: 50px 0;
         transition: all 0.5s;
     }
