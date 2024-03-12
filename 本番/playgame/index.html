@@ -34,24 +34,44 @@
         #mapdiv {
             float: left;
             height: 100%;
-            width: 70%;
+            width: 60%;
         }
 
         #info {
             float: left;
             height: 100%;
-            width: 30%;
+            width: 40%;
+            background-color: beige;
         }
 
         #history {
+            float: left;
             height: 40%;
-            width: 100%;
+            width: 50%;
             overflow-y: scroll;
+            border: 10px double #313131;
+            border-radius: 20px;
+            background-color: aliceblue;
+        }
+
+        #dice {
+            float: left;
+            height: 40%;
+            width: 50%;
+        }
+
+        #dice_icon,
+        #dice_button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         #pano {
             height: 50%;
-            width: 100%;
+            width: 40%;
+            position: absolute;
+            bottom: 0;
         }
     </style>
 </head>
@@ -59,12 +79,14 @@
 <body>
     <div id="mapdiv"></div>
     <!-- panoがstreetviewの入っているdiv要素です。これもmapdivと同じように余白類調整してください。 -->
+    <!-- background-color指定しているのはどのdiv要素がどこにいるのかを可視化するためで、デザイン的な意図はないです。 -->
     <div id="info">
-        <button onclick="diceroll()">ダイスを振る</button>
         <div id="turn">プレイヤー1の番です。</div>
-        <div id="history">
-
+        <div id="dice">
+            <img src="../images/dices/dice_1.png" id="dice_icon">
+            <button onclick="diceroll()" id="dicebutton">ダイスを振る</button>
         </div>
+        <div id="history"> </div>
         <div id="pano"></div>
     </div>
 
@@ -245,11 +267,14 @@
         let turn = 0;
         let turndisplay = document.getElementById("turn");
         let history = document.getElementById("history");
+        let diceicon = document.getElementById("dice_icon");
+        let diconpath = ["../images/dices/dice_1.png", "../images/dices/dice_2.png", "../images/dices/dice_3.png", "../images/dices/dice_4.png", "../images/dices/dice_5.png", "../images/dices/dice_6.png"]
         function diceroll(e) {
             players[turn].clearLayers();
             let n = Math.floor(Math.random() * 6) + 1
             pos[turn] += n;
             history.innerHTML += "プレイヤー" + (turn + 1) + "が" + n + "を出しました。<br>";
+            diceicon.src = diconpath[n - 1];
             if (pos[turn] > mapdata.mapsize) {
                 c = mapdata.goal;
                 history.innerHTML += "プレイヤー" + (turn + 1) + "がゴールしました。<br>";

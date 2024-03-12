@@ -253,53 +253,34 @@
     });
 
     var map = L.map("mapdiv", {
-      center: [43.771179, 142.368805], zoom: 16, minZoom: 5, maxZoom: 18,
+      center: [43.771179, 142.368805], zoom: 16, minZoom: 8, maxZoom: 18,
       layers: [pale, rdcllayer, startlayer, goallayer, gamemaplayer, shortestpathlayer]
-    });
-
-    let popup;
-    map.on('click', function (e) {
-      if (popup) {
-        map.removeLayer(popup);
-      }
-      popup = L.marker(e.latlng).on('click', function (e) {
-        if (map.getZoom() < 16) {
-          return;
-        }
-        startlayer.clearLayers();
-        goallayer.clearLayers();
-        startlayer.addData({
-          type: "Feature",
-          geometry: { "type": "Point", "coordinates": [e.latlng.lng, e.latlng.lat] },
-          properties: {}
-        });
-        goallayer.addData({
-          type: "Feature",
-          geometry: { "type": "Point", "coordinates": [e.latlng.lng + 0.0001, e.latlng.lat + 0.0001] },
-          properties: {}
-        });
-        markerDragEnd(e);
-        map.removeLayer(popup);
-      }).addTo(map);
     });
 
     map.on('zoomend', function (e) {
       if (map.getZoom() < 16) {
         if (map.hasLayer(rdcllayer)) {
           shortestpathlayer.clearLayers();
-          map.removeLayer(startlayer);
-          map.removeLayer(goallayer);
-          map.removeLayer(gamemaplayer);
+          startlayer.clearLayers();
+          goallayer.clearLayers();
+          gamemaplayer.clearLayers();
           map.removeLayer(rdcllayer);
         }
       } else {
         if (!map.hasLayer(rdcllayer)) {
-          startlayer.addTo(map);
-          goallayer.addTo(map);
-          gamemaplayer.addTo(map);
-          startlayer.clearLayers();
-          goallayer.clearLayers();
-          gamemaplayer.clearLayers();
+          let c = map.getCenter();
+          console.log(c);
+          startlayer.addData({
+            type: "Feature",
+            geometry: { "type": "Point", "coordinates": [c.lng, c.lat] },
+            properties: {}
+          }
+          );
+          goallayer.addData({
+            type: "Feature",
+            geometry: { "type": "Point", "coordinates": [c.lng + 0.001, c.lat] },
+            properties: {}
+          });
           rdcllayer.addTo(map);
         }
       }
