@@ -8,22 +8,29 @@
 </head>
 
 <body>
-
-    <div class="description">
+    <div class="menu">
         <h1 class="title">地元deすごろく</h1>
-        <div class="menu">
-            <button onclick="location.href='./makemap/index.html'">ゲームを遊ぶ！</button>
+        <div class="buttons">
+            <p class="btn" onclick="location.href='./makemap/index.html'">ゲームをプレイ</p>
+            <p class="btn">あそびかた</p>
+            <p class="btn">オプション</p>
         </div>
     </div>
-
 </body>
 
 <style>
     @charset "utf-8";
-    @import url('https://fonts.googleapis.com/css2?family=Kosugi&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Kosugi&family=M+PLUS+Rounded+1c&display=swap');
+
+    html {
+        height: 100%;
+        background: linear-gradient(90deg, rgb(157, 45, 255) 0%, rgba(255, 255, 255, 1) 100%);
+    }
 
     body {
-        font-family: "Kosugi", sans-serif;
+        font-family: "M PLUS Rounded 1c", sans-serif;
+        height: 100%;
+        position: relative;
     }
 
     ul {
@@ -35,19 +42,37 @@
     }
 
 
-    .description {
-        width: 400px;
-        height: 200px;
+    .menu {
+        width: 500px;
+        height: 600px;
         position: absolute;
-        left: 50%;
-        top: 50%;
-        margin-left: -150px;
-        margin-top: -100px;
+        margin: auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        box-shadow: 0 0 10px 10px rgba(87, 87, 87, 0.1);
     }
 
     .title {
         text-align: center;
         font-size: 50px;
+    }
+
+    .buttons {
+        margin-top: 95.5px;
+    }
+
+    .btn {
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .btn:hover {
+        backdrop-filter: blur(12px);
+        background-color: rgba(255, 255, 255, 0.3);
     }
 </style>
 
