@@ -46,8 +46,9 @@
 
         #history {
             float: left;
-            height: 40%;
-            width: 50%;
+            height: 40vh;
+            width: 20vh;
+            margin: 0 20px;
             overflow-y: scroll;
             border: 10px double #313131;
             border-radius: 20px;
@@ -73,6 +74,28 @@
             position: absolute;
             bottom: 0;
         }
+
+        #turn {
+            font-family: "M PLUS Rounded 1c", sans-serif;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        #column {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #dicebutton {
+            display: block;
+            width: 150px;
+            border-radius: 5px;
+            margin: 20px 0;
+            padding: 10px 0;
+
+        }
+
+
     </style>
 </head>
 
@@ -82,11 +105,17 @@
     <!-- background-color指定しているのはどのdiv要素がどこにいるのかを可視化するためで、デザイン的な意図はないです。 -->
     <div id="info">
         <div id="turn">プレイヤー1の番です。</div>
-        <div id="dice">
-            <img src="../images/dices/dice_1.png" id="dice_icon">
-            <button onclick="diceroll()" id="dicebutton">ダイスを振る</button>
-        </div>
-        <div id="history"> </div>
+        <ul id="column">
+            <li>
+                <div id="dice">
+                    <img src="../images/dices/dice_1.png" id="dice_icon">
+                    <button onclick="diceroll()" id="dicebutton">ダイスを振る</button>
+                </div>
+            </li>
+            <li>
+                <div id="history"> </div>
+            </li>
+        </ul>
         <div id="pano"></div>
     </div>
 
