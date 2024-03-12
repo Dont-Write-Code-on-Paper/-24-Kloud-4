@@ -57,6 +57,18 @@
     .submit {
       display: block;
       margin: auto;
+      border: none;
+      outline: none;
+      border-radius: 5px;
+      color: #fff;
+      background-color: #ff0000;
+      width: 150px;
+      height: 40px
+    }
+
+    .submit:hover {
+      background-color: #ff5252;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -83,7 +95,7 @@
   <!-- mapdiv内に地図が入ってます。 -->
   <!-- ここの余白やら配置やらををいい感じに調整して下さい。 -->
   <div id="mapdiv"> </div>
-  <button class="submit" onclick="playgame()">このマップを遊ぶ！</button>
+  <button class="submit" onclick="playgame()">このマップで遊ぶ!</button>
 </body>
 
 <script>
