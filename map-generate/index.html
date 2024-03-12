@@ -261,16 +261,31 @@
         }).addTo(map);
       });
 
-      map.on('zoonend', function (e) {
-        if (map.getZoom() > 16) {
+
+      map.on('zoomend', function (e) {
+        if (map.getZoom() < 16) {
           if (map.hasLayer(rdcllayer)) {
+            shortestpathlayer.clearLayers();
             startlayer.clearLayers();
             goallayer.clearLayers();
-            gamemaplayer.clearLayers();
+            map.removeLayer(gamemaplayer);
             map.removeLayer(rdcllayer);
           }
         } else {
           if (!map.hasLayer(rdcllayer)) {
+            let c = map.getCenter();
+            console.log(c);
+            startlayer.addData({
+              type: "Feature",
+              geometry: { "type": "Point", "coordinates": [c.lng, c.lat] },
+              properties: {}
+            }
+            );
+            goallayer.addData({
+              type: "Feature",
+              geometry: { "type": "Point", "coordinates": [c.lng + 0.001, c.lat] },
+              properties: {}
+            });
             rdcllayer.addTo(map);
           }
         }
