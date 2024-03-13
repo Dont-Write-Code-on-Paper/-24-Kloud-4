@@ -92,8 +92,6 @@
             border-radius: 10px;
             margin: 20px 0;
         }
-
-
     </style>
 </head>
 
@@ -185,39 +183,23 @@
         });
 
         let road_edge_layer = L.geoJson(null, {
-            style: function () { return { "color": "#ffffff", "weight": 31, "opacity": 1, "lineCap": "butt", }; },
+            style: function () { return { "color": "#ffffff", "weight": 31, "opacity": 1, }; },
             clickable: false
         });
         let road_main_layer = L.geoJson(null, {
-            style: function () { return { "color": "#808080", "weight": 21, "opacity": 1, "lineCap": "butt", }; },
+            style: function () { return { "color": "#808080", "weight": 21, "opacity": 1, }; },
             clickable: false
         });
         let road_center_line_layer = L.geoJson(null, {
-            style: function () { return { "color": "#ffffff", "weight": 5, "opacity": 1, "lineCap": "butt", "dashArray": "10 9" }; },
+            style: function () { return { "color": "#ffffff", "weight": 5, "opacity": 1, "dashArray": "10 9" }; },
             clickable: false
         });
 
-        let f = {
-            "type": "Feature",
-            "geometry": {
-                "type": "LineString",
-                "coordinates": [mapdata.start, mapdata.map[0]]
-            },
-            "properties": {}
-        }
-        road_edge_layer.addData(f);
-        road_main_layer.addData(f);
-        road_center_line_layer.addData(f);
-        for (let i = 0; i < mapdata.map.length - 1; i++) {
-            f.geometry.coordinates = [mapdata.map[i], mapdata.map[i + 1]]
-            road_edge_layer.addData(f);
-            road_main_layer.addData(f);
-            road_center_line_layer.addData(f);
-        }
-        f.geometry.coordinates = [mapdata.map[mapdata.map.length - 1], mapdata.goal]
-        road_edge_layer.addData(f);
-        road_main_layer.addData(f);
-        road_center_line_layer.addData(f);
+        mapdata.path.forEach(i => {
+            road_edge_layer.addData(i);
+            road_main_layer.addData(i);
+            road_center_line_layer.addData(i);
+        });
 
         let redplayerlayer = L.geoJson({
             type: "FeatureCollection",
@@ -276,6 +258,10 @@
             }
         });
 
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        };
+
         let players = [redplayerlayer, blueplayerlayer, greenplayerlayer, yellowplayerlayer];
         let pos = [0, 0, 0, 0];
         let c = mapdata.start;
@@ -292,32 +278,36 @@
         let history = document.getElementById("history");
         let diceicon = document.getElementById("dice_icon");
         let diconpath = ["../images/dices/dice_1.png", "../images/dices/dice_2.png", "../images/dices/dice_3.png", "../images/dices/dice_4.png", "../images/dices/dice_5.png", "../images/dices/dice_6.png"]
-        function diceroll(e) {
-            players[turn].clearLayers();
+        mapdata.map.push(mapdata.goal);
+        async function diceroll(e) {
             let n = Math.floor(Math.random() * 6) + 1
-            pos[turn] += n;
             history.innerHTML += "プレイヤー" + (turn + 1) + "が" + n + "を出しました。<br>";
             diceicon.src = diconpath[n - 1];
-            if (pos[turn] > mapdata.mapsize) {
-                c = mapdata.goal;
-                history.innerHTML += "プレイヤー" + (turn + 1) + "がゴールしました。<br>";
-            } else {
-                c = mapdata.map[pos[turn] - 1];
+
+            for (let i = 1; i <= n; i++) {
+                c = mapdata.map[++pos[turn] - 1];
+                players[turn].clearLayers();
+                players[turn].addData({
+                    type: "Feature",
+                    geometry: { "type": "Point", "coordinates": c },
+                    properties: {}
+                })
+                map.setView([c[1], c[0]]);
+                panorama.setPosition({ lat: c[1], lng: c[0] });
+                if (pos[turn] > mapdata.mapsize) {
+                    history.innerHTML += "プレイヤー" + (turn + 1) + "がゴールしました。<br>";
+                    break;
+                }
+                await sleep(500);
             }
-            players[turn].addData({
-                type: "Feature",
-                geometry: { "type": "Point", "coordinates": c },
-                properties: {}
-            })
-            map.setView([c[1], c[0]]);
-            panorama.setPosition({ lat: c[1], lng: c[0] });
+
             turn = (turn + 1) % mapdata.playernum;
             turndisplay.innerText = "プレイヤー" + (turn + 1) + "の番です。";
         }
 
         let map = L.map("mapdiv", {
             center: [mapdata.start[1], mapdata.start[0]], zoom: 16, minZoom: 16, maxZoom: 18,
-            layers: [pale, startlayer, goallayer, gamemaplayer, redplayerlayer, blueplayerlayer, greenplayerlayer, yellowplayerlayer, road_edge_layer, road_main_layer, road_center_line_layer]
+            layers: [pale, startlayer, goallayer, gamemaplayer, redplayerlayer, blueplayerlayer, greenplayerlayer, yellowplayerlayer, road_edge_layer, road_main_layer, /*road_center_line_layer*/]
         });
 
         const panoEle = document.getElementById('pano');

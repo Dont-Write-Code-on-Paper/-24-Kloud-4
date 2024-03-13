@@ -145,10 +145,12 @@
 	};
 
 	//マーカー移動後の経路探索
+	let mappath = [];
 	var markerDragEnd = function (e) {
 		//前回の結果を消去
 		shortestpathlayer.clearLayers();
 		gamemaplayer.clearLayers();
+		mappath = [];
 
 		//マーカー近傍のnodeを探索
 		var start = turf.nearest(startlayer.getLayers()[0].toGeoJSON(), nodes);
@@ -161,21 +163,20 @@
 		//探索結果から経路作成
 		var f = null;
 		var pathlength = 0;
-		var spath = [];
 		for (var i = 0; i < shortestpath.length - 1; i++) {
 			if (shortestpath[i] in dijkstrafeature) {
 				if (shortestpath[i + 1] in dijkstrafeature[shortestpath[i]]) {
 					f = dijkstrafeature[shortestpath[i]][shortestpath[i + 1]];
 					shortestpathlayer.addData(f);
 					pathlength += turf.lineDistance(f, "kilometers");
-					spath.push(f);
+					mappath.push(f);
 				}
 			}
 			if (shortestpath[i + 1] in dijkstrafeature) {
 				if (shortestpath[i] in dijkstrafeature[shortestpath[i + 1]]) {
 					f = dijkstrafeature[shortestpath[i + 1]][shortestpath[i]];
 					shortestpathlayer.addData(f);
-					spath.push(f);
+					mappath.push(f);
 					pathlength += turf.lineDistance(f, "kilometers");
 				}
 			}
@@ -184,12 +185,12 @@
 		var dist = pathlength / (mapsize + 1);
 		var now = 0;
 		var spacenum = 0;
-		for (var i = 0; i < spath.length; i++) {
-			now += turf.lineDistance(spath[i]);
+		for (var i = 0; i < mappath.length; i++) {
+			now += turf.lineDistance(mappath[i]);
 			if (now >= dist) {
 				gamemaplayer.addData({
 					type: "Feature",
-					geometry: { "type": "Point", "coordinates": spath[i].geometry.coordinates[0] },
+					geometry: { "type": "Point", "coordinates": mappath[i].geometry.coordinates[0] },
 					properties: {}
 				})
 				spacenum++;
@@ -329,7 +330,8 @@
 		let mapdata = {
 			start: startlayer.getLayers()[0].toGeoJSON().geometry.coordinates,
 			goal: goallayer.getLayers()[0].toGeoJSON().geometry.coordinates,
-			playernum: Number(document.getElementById("playernum").value)
+			playernum: Number(document.getElementById("playernum").value),
+			path: mappath
 		};
 		let points = gamemaplayer.getLayers();
 		mapdata.mapsize = points.length;
