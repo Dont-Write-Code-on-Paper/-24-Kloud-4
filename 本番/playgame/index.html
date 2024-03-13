@@ -46,8 +46,8 @@
 
         #history {
             float: left;
-            height: 40vh;
-            width: 20vh;
+            height: 40%;
+            width: 50%;
             margin: 0 20px;
             overflow-y: scroll;
             border: 10px double #313131;
@@ -58,12 +58,9 @@
         #dice {
             float: left;
             height: 40%;
-            width: 50%;
-        }
-
-        #dice_icon,
-        #dice_button {
+            width: 40%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
@@ -81,10 +78,10 @@
             font-size: 30px;
         }
 
-        #column {
+        /* #column {
             display: flex;
             justify-content: space-between;
-        }
+        } */
 
         #dicebutton {
             display: block;
@@ -92,10 +89,11 @@
             border-radius: 5px;
             margin: 20px 0;
             padding: 10px 0;
-
         }
 
-
+        /* ul {
+            list-style: none;
+        } */
     </style>
 </head>
 
@@ -143,7 +141,8 @@
                         iconUrl: "../images/points/start.png",
                         iconSize: [40, 40],
                         iconAnchor: [20, 20]
-                    })
+                    }),
+                    zIndexOffset: 152
                 });
             }
         });
@@ -162,7 +161,8 @@
                         iconUrl: "../images/points/goal.png",
                         iconSize: [40, 40],
                         iconAnchor: [20, 20]
-                    })
+                    }),
+                    zIndexOffset: 151
                 });
             }
         });
@@ -177,7 +177,8 @@
                         iconUrl: "../images/points/point.png",
                         iconSize: [40, 40],
                         iconAnchor: [20, 20]
-                    })
+                    }),
+                    zIndexOffset: 150
                 });
             }
         });
@@ -192,15 +193,18 @@
 
         let road_edge_layer = L.geoJson(null, {
             style: function () { return { "color": "#ffffff", "weight": 31, "opacity": 1, "lineCap": "butt", }; },
-            clickable: false
+            clickable: false,
+            zIndexOffset: 100
         });
         let road_main_layer = L.geoJson(null, {
             style: function () { return { "color": "#808080", "weight": 21, "opacity": 1, "lineCap": "butt", }; },
-            clickable: false
+            clickable: false,
+            zIndexOffset: 101
         });
         let road_center_line_layer = L.geoJson(null, {
             style: function () { return { "color": "#ffffff", "weight": 5, "opacity": 1, "lineCap": "butt", "dashArray": "10 9" }; },
-            clickable: false
+            clickable: false,
+            zIndexOffset: 102
         });
 
         let f = {
@@ -234,8 +238,9 @@
                     icon: L.icon({
                         iconUrl: "../images/players/red.png",
                         iconSize: [30, 50],
-                        iconAnchor: [12, 40]
-                    })
+                        iconAnchor: [0, 45]
+                    }),
+                    zIndexOffset: 250
                 });
             }
         });
@@ -248,8 +253,9 @@
                     icon: L.icon({
                         iconUrl: "../images/players/green.png",
                         iconSize: [30, 50],
-                        iconAnchor: [16, 40]
-                    })
+                        iconAnchor: [20, 45]
+                    }),
+                    zIndexOffset: 250
                 });
             }
         });
@@ -262,8 +268,9 @@
                     icon: L.icon({
                         iconUrl: "../images/players/blue.png",
                         iconSize: [30, 50],
-                        iconAnchor: [14, 38]
-                    })
+                        iconAnchor: [10, 35]
+                    }),
+                    zIndexOffset: 250
                 });
             }
         });
@@ -276,8 +283,9 @@
                     icon: L.icon({
                         iconUrl: "../images/players/yellow.png",
                         iconSize: [30, 50],
-                        iconAnchor: [18, 38]
-                    })
+                        iconAnchor: [40, 35]
+                    }),
+                    zIndexOffset: 250
                 });
             }
         });
@@ -323,7 +331,7 @@
 
         let map = L.map("mapdiv", {
             center: [mapdata.start[1], mapdata.start[0]], zoom: 16, minZoom: 16, maxZoom: 18,
-            layers: [pale, startlayer, goallayer, gamemaplayer, redplayerlayer, blueplayerlayer, greenplayerlayer, yellowplayerlayer, road_edge_layer, road_main_layer, road_center_line_layer]
+            layers: [pale, gamemaplayer, startlayer, goallayer, redplayerlayer, blueplayerlayer, greenplayerlayer, yellowplayerlayer, road_edge_layer, road_main_layer, road_center_line_layer]
         });
 
         const panoEle = document.getElementById('pano');
