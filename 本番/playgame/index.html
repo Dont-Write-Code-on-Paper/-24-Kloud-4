@@ -109,6 +109,7 @@
         #turn {
             font-family: "M PLUS Rounded 1c", sans-serif;
             text-align: center;
+            color: red;
             font-size: 30px;
         }
 
@@ -149,12 +150,12 @@
             position: fixed;
             width: 75%;
             z-index: 1100;
-            background: #fff;
+            background: beige;
+            border-radius: 20px;
             padding: 2%;
             top: 50%;
             left: 50%;
             transform: translate(-50%,-50%);
-            overflow-y: scroll;
             
             /* ヌルっと出てくるアニメション */
             animation-name:fadeInAnime;
@@ -393,6 +394,7 @@
         };
 
         let players = [redplayerlayer, blueplayerlayer, greenplayerlayer, orangeplayerlayer];
+        let playerscolor = ["red", "blue", "green", "orange"];
         let remdisplay_id = ["remdisplay-red", "remdisplay-blue", "remdisplay-green", "remdisplay-orange"];
         let rem_id = ["redrem", "bluerem", "greenrem", "orangerem"];
         let remdisplays = [];
@@ -453,6 +455,7 @@
 
             turn = (turn + 1) % mapdata.playernum;
             turndisplay.innerText = "プレイヤー" + (turn + 1) + "の番です。";
+            turndisplay.style.color = playerscolor[turn];
         }
 
         let map = L.map("mapdiv", {
