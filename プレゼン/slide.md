@@ -1,7 +1,168 @@
 ---
 marp: true
 theme: gaia
+style: |
+    section {
+        background-color: beige;
+    }
+    * {
+        color: #313131;
+    }
+    p {
+        font-size: 50px;
+    }
 size: 16:9
-header: 地元ですごろく - 神にコード書くな連盟
+header: 地元ですごろく - 紙にコード書くな連盟
 paginate: true
 ---
+<!--
+_class: lead
+_header: ""
+_paginate: false
+-->
+<style scoped>
+    h1 {
+        font-size: 100px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Kosugi&family=M+PLUS+Rounded+1c&display=swap');
+* {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+}
+</style>
+
+# 地元ですごろく！
+![height:300](./img/sugoroku.png)
+
+---
+<style scoped>
+    li {
+        font-size: 40px;
+        margin: 0 0 0 150px;
+    }
+</style>
+# テーマ 『さぁ、架け橋を作ろう！』
+人と人をつなぐ架け橋=コミュニケーション
+　⇒初めましての人と話すネタになるもの
+- 誰にでも関係がある
+- 知らなくとも話すことができる
+- 知っていたら更に盛り上がれる
+
+
+<p>　　　　　　　　　　　　　　　　……天気？</p>
+
+---
+<!--
+_class: lead
+-->
+<style scoped>
+    h1 {
+        font-size: 200px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+# 地元
+出身地・居住地・通学先・勤務先　など
+
+---
+# 地元ですごろく
+誰かの生まれ育った町で　毎日通っている町で
+夏休みに電車に乗って一人で行ったおじいちゃんの家があるあの町で
+
+ストリートビューを見てあんなことやこんなことを思い出し喋りながら、すごろくをしませんか？
+
+---
+<style scoped>
+    .split {
+        display: table;
+        width: 100%;
+    }
+    .split-item {
+        display: table-cell;
+        padding: 0px;
+        margin: 0px;
+        width: 55%;
+        position: relative;
+    }
+    .split-left__inner {
+        height: 100%;
+        position: fixed;
+        width: 50%;
+    }
+</style>
+
+<!-- 
+_footer: ※画像は開発中のもので、実際とは異なる場合があります。
+ -->
+
+# 遊び方
+## 1. マップを作る
+
+<div class="split">
+    <div class="split-item split-left">
+        <div class="split-left__inner">
+            <img src="./img/image.png" style="height :400px">
+        </div>
+    </div>
+    <div class="split-item split-right">
+        <div class="split-right__inner">
+            <p>
+                (S)(G)のマーカーを動かしてスタート、ゴール位置を決めよう！
+            </p>
+        </div>
+    </div>
+</div>
+
+---
+# 遊び方
+## 2. サイコロを振って進もう！
+
+<style scoped>
+    .split {
+        display: table;
+        width: 100%;
+    }
+    .split-item {
+        display: table-cell;
+        padding: 0px;
+        margin: 0px;
+        width: 64%;
+        position: relative;
+    }
+    .split-left__inner {
+        height: 100%;
+        position: fixed;
+        width: 50%;
+    }
+</style>
+<div class="split">
+    <div class="split-item split-left">
+        <div class="split-left__inner">
+            <img src="./img/image2.png" style="height :400px">
+        </div>
+    </div>
+    <div class="split-item split-right">
+        <div class="split-right__inner">
+            <p>
+                ストリートビューを見ながら町を 進んでいこう！
+            </p>
+        </div>
+    </div>
+</div>
+
+---
+<!--
+_class: lead
+-->
+<style scoped>
+    h1 {
+        font-size: 100px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+# 実物を動かしてみよう！
