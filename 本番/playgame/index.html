@@ -52,7 +52,7 @@
         }
 
         #history {
-            flex-basis: 80%;
+            flex-basis: 60%;
             height: 38vh;
             width: 25vw;
             margin: 0 5px 10px 5px;
@@ -62,19 +62,49 @@
             background-color: aliceblue;
         }
 
+        #remainders {
+            height: 22vh;
+            margin-bottom: 10px;
+            border: 10px double #313131;
+            border-radius: 20px;
+            background-color: aliceblue;
+        }
+
+        .rem {
+            font-size: 35px;
+            font-weight: bolder;
+        }
+
+        #remdisplay-red {
+            Visibility: hidden;
+            color: red;
+        }
+
+        #remdisplay-blue {
+            Visibility: hidden;
+            color: blue;
+        }
+
+        #remdisplay-green {
+            Visibility: hidden;
+            color: green;
+        }
+
+        #remdisplay-orange {
+            Visibility: hidden;
+            color: orange;
+        }
+
         #dice {
-            flex-basis: 20%;
+            flex-basis: 40%;
             margin-left: 10px;
             margin-right: 5px;
         }
 
         #dice_icon,
         #dice_button {
-            justify-content: center;
-            align-items: center;
-            width: 100%;
+            width: 50%;
         }
-
 
         #turn {
             font-family: "M PLUS Rounded 1c", sans-serif;
@@ -182,10 +212,17 @@
         <div id="turn">プレイヤー1の番です。</div>
         <div id="column">
             <div id="dice">
+                <div id="remainders">
+                    <div id="remdisplay-red">プレイヤー1 残り<span class="rem" id="redrem">1</span>マス</div>
+                    <div id="remdisplay-blue">プレイヤー2 残り<span class="rem" id="bluerem">2</span>マス</div>
+                    <div id="remdisplay-green">プレイヤー3 残り<span class="rem" id="greenrem">3</span>マス</div>
+                    <div id="remdisplay-orange">プレイヤー4 残り<span class="rem" id="orangerem">4</span>マス</div>
+                </div>
                 <img src="../images/dices/dice_1.png" id="dice_icon">
                 <button onclick="diceroll()" id="dice_button">ダイスを振る</button>
             </div>
-            <div id="history"> </div>
+            <div id="history">
+            </div>
         </div>
         <div id="mapdiv"></div>
         
@@ -206,6 +243,7 @@
     <script>
         let url = new URL(window.location.href);
         let mapdata = JSON.parse(url.searchParams.get('mapdata'));
+        console.log(mapdata);
 
         //地理院地図レイヤ
         let pale = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', {
@@ -335,7 +373,7 @@
                 });
             }
         });
-        let yellowplayerlayer = L.geoJson({
+        let orangeplayerlayer = L.geoJson({
             type: "FeatureCollection",
             features: []
         }, {
@@ -354,10 +392,16 @@
             return new Promise(resolve => setTimeout(resolve, ms));
         };
 
-        let players = [redplayerlayer, blueplayerlayer, greenplayerlayer, yellowplayerlayer];
+        let players = [redplayerlayer, blueplayerlayer, greenplayerlayer, orangeplayerlayer];
+        let remdisplay_id = ["remdisplay-red", "remdisplay-blue", "remdisplay-green", "remdisplay-orange"];
+        let rem_id = ["redrem", "bluerem", "greenrem", "orangerem"];
+        let remdisplays = [];
         let pos = [0, 0, 0, 0];
         let c = mapdata.start;
         for (let i = 0; i < mapdata.playernum; i++) {
+            document.getElementById(remdisplay_id[i]).style.visibility = "visible";
+            remdisplays.push(document.getElementById(rem_id[i]));
+            remdisplays[i].innerText = mapdata.map.length + 1;
             players[i].addData({
                 type: "Feature",
                 geometry: { "type": "Point", "coordinates": c },
@@ -376,6 +420,10 @@
         let diconpath = ["../images/dices/dice_1.png", "../images/dices/dice_2.png", "../images/dices/dice_3.png", "../images/dices/dice_4.png", "../images/dices/dice_5.png", "../images/dices/dice_6.png"]
         mapdata.map.push(mapdata.goal);
         async function diceroll(e) {
+            for (let i = 0; i < 10; i++) {
+                diceicon.src = diconpath[Math.floor(Math.random() * 6)];
+                await sleep(150);
+            }
             let n = Math.floor(Math.random() * 6) + 1
             history.innerHTML += "プレイヤー" + (turn + 1) + "が" + n + "を出しました。<br>";
             diceicon.src = diconpath[n - 1];
@@ -383,6 +431,7 @@
             for (let i = 1; i <= n; i++) {
                 c = mapdata.map[++pos[turn] - 1];
                 panorama.setPosition({ lat: c[1], lng: c[0] });
+                remdisplays[turn].innerText = (mapdata.map.length - pos[turn]);
                 players[turn].clearLayers();
                 players[turn].addData({
                     type: "Feature",
@@ -390,7 +439,7 @@
                     properties: {}
                 })
                 map.setView([c[1], c[0]]);
-                if (pos[turn] > mapdata.mapsize) {
+                if (pos[turn] > mapdata.map.length - 1) {
                     history.innerHTML += "プレイヤー" + (turn + 1) + "がゴールしました。<br>";
                     winnerdisplay.innerHTML = "プレイヤー" + (turn + 1) + "の勝利！ <br>";
                     winnericon.src = winconpath[turn];
@@ -406,7 +455,7 @@
 
         let map = L.map("mapdiv", {
             center: [mapdata.start[1], mapdata.start[0]], zoom: 16, minZoom: 16, maxZoom: 18,
-            layers: [pale, startlayer, goallayer, gamemaplayer, redplayerlayer, blueplayerlayer, greenplayerlayer, yellowplayerlayer, road_edge_layer, road_main_layer, /*road_center_line_layer*/]
+            layers: [pale, startlayer, goallayer, gamemaplayer, redplayerlayer, blueplayerlayer, greenplayerlayer, orangeplayerlayer, road_edge_layer, road_main_layer, /*road_center_line_layer*/]
         });
 
         const panoEle = document.getElementById('pano');

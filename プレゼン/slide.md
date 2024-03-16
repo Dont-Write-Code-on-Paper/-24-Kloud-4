@@ -76,85 +76,6 @@ _class: lead
 ストリートビューを見てあんなことやこんなことを思い出し喋りながら、すごろくをしませんか？
 
 ---
-<style scoped>
-    .split {
-        display: table;
-        width: 100%;
-    }
-    .split-item {
-        display: table-cell;
-        padding: 0px;
-        margin: 0px;
-        width: 55%;
-        position: relative;
-    }
-    .split-left__inner {
-        height: 100%;
-        position: fixed;
-        width: 50%;
-    }
-</style>
-
-<!-- 
-_footer: ※画像は開発中のもので、実際とは異なる場合があります。
- -->
-
-# 遊び方
-## 1. マップを作る
-
-<div class="split">
-    <div class="split-item split-left">
-        <div class="split-left__inner">
-            <img src="./img/image.png" style="height :400px">
-        </div>
-    </div>
-    <div class="split-item split-right">
-        <div class="split-right__inner">
-            <p>
-                (S)(G)のマーカーを動かしてスタート、ゴール位置を決めよう！
-            </p>
-        </div>
-    </div>
-</div>
-
----
-# 遊び方
-## 2. サイコロを振って進もう！
-
-<style scoped>
-    .split {
-        display: table;
-        width: 100%;
-    }
-    .split-item {
-        display: table-cell;
-        padding: 0px;
-        margin: 0px;
-        width: 64%;
-        position: relative;
-    }
-    .split-left__inner {
-        height: 100%;
-        position: fixed;
-        width: 50%;
-    }
-</style>
-<div class="split">
-    <div class="split-item split-left">
-        <div class="split-left__inner">
-            <img src="./img/image2.png" style="height :400px">
-        </div>
-    </div>
-    <div class="split-item split-right">
-        <div class="split-right__inner">
-            <p>
-                ストリートビューを見ながら町を 進んでいこう！
-            </p>
-        </div>
-    </div>
-</div>
-
----
 <!--
 _class: lead
 -->
@@ -166,3 +87,7 @@ _class: lead
     }
 </style>
 # 実物を動かしてみよう！
+
+---
+# 今後の展望
+- マスに
