@@ -31,10 +31,17 @@
             border: none;
         }
 
-        #mapdiv {
+        #pano {
             float: left;
             height: 100%;
             width: 60%;
+        }
+
+        #mapdiv {
+            height: 50%;
+            width: 40%;
+            position: absolute;
+            bottom: 0;
         }
 
         #info {
@@ -68,12 +75,6 @@
             width: 100%;
         }
 
-        #pano {
-            height: 50%;
-            width: 40%;
-            position: absolute;
-            bottom: 0;
-        }
 
         #turn {
             font-family: "M PLUS Rounded 1c", sans-serif;
@@ -96,7 +97,7 @@
 </head>
 
 <body>
-    <div id="mapdiv"></div>
+    <div id="pano"></div>
     <!-- panoがstreetviewの入っているdiv要素です。これもmapdivと同じように余白類調整してください。 -->
     <!-- background-color指定しているのはどのdiv要素がどこにいるのかを可視化するためで、デザイン的な意図はないです。 -->
     <div id="info">
@@ -108,7 +109,7 @@
             </div>
             <div id="history"> </div>
         </div>
-        <div id="pano"></div>
+        <div id="mapdiv"></div>
     </div>
 
     <script>
@@ -286,6 +287,7 @@
 
             for (let i = 1; i <= n; i++) {
                 c = mapdata.map[++pos[turn] - 1];
+                panorama.setPosition({ lat: c[1], lng: c[0] });
                 players[turn].clearLayers();
                 players[turn].addData({
                     type: "Feature",
@@ -293,12 +295,11 @@
                     properties: {}
                 })
                 map.setView([c[1], c[0]]);
-                panorama.setPosition({ lat: c[1], lng: c[0] });
                 if (pos[turn] > mapdata.mapsize) {
                     history.innerHTML += "プレイヤー" + (turn + 1) + "がゴールしました。<br>";
                     break;
                 }
-                await sleep(500);
+                await sleep(1500);
             }
 
             turn = (turn + 1) % mapdata.playernum;
