@@ -422,11 +422,13 @@
         async function diceroll(e) {
             for (let i = 0; i < 10; i++) {
                 diceicon.src = diconpath[Math.floor(Math.random() * 6)];
-                await sleep(150);
+                await sleep(50);
             }
+
             let n = Math.floor(Math.random() * 6) + 1
             history.innerHTML += "プレイヤー" + (turn + 1) + "が" + n + "を出しました。<br>";
             diceicon.src = diconpath[n - 1];
+            await sleep(500);
 
             for (let i = 1; i <= n; i++) {
                 c = mapdata.map[++pos[turn] - 1];
