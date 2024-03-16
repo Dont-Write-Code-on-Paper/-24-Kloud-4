@@ -93,6 +93,84 @@
             border-radius: 10px;
             margin: 20px 0;
         }
+
+
+        /* ゴール演出 */
+
+        #popup-background{
+	        position: fixed; /* ブラウザの定位置に固定 */
+	        background: rgba(0, 0, 0, 0.5); /* 背景色を半透明の黒色に */
+	        width: 100%; /* 要素の横幅を画面全体に */
+	        height: 100%; /* 要素の高さを画面全体に */
+	        top: 0; /* 要素の固定位置をブラウザ最上部に合わせる */
+	        left: 0; /* 要素の固定位置をブラウザ左側に合わせる */
+	        z-index: 1000; /* 要素をコンテンツより前面に（要調整） */
+        }
+        
+        
+        #popup-switch {
+            /* チェックボックスを非表示 */
+            display: none;
+        }
+        
+        #popup-content {
+            /* ポップアップ本体 */
+            display: inline-block;
+            position: fixed;
+            width: 75%;
+            z-index: 1100;
+            background: #fff;
+            padding: 2%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            overflow-y: scroll;
+            
+            /* ヌルっと出てくるアニメション */
+            animation-name:fadeInAnime;
+            animation-duration:3s;
+            animation-fill-mode:forwards;
+            opacity:0;
+        }
+        @keyframes fadeInAnime{
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        #popup-close {
+            /* ポップアップ内の閉じるボタン */
+            position: relative;
+            display: inline-block;
+            background: #09f;
+            color: #fff;
+            padding: 0 1em;
+            border-radius: 3px;
+            cursor: pointer;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #popup-switch:not(:checked) ~ #popup-background, #popup-switch:not(:checked) ~ #popup-box {
+            /* ポップアップ･透過背景を閉じる */
+            display: none;
+        }
+
+        #winner {
+            font-family: "M PLUS Rounded 1c", sans-serif;
+            text-align: center;
+            font-size: 42px;
+        }
+        
+        #winner_icon{
+            display: block;
+            margin: 10px auto;
+            object-fit: cover;
+            width: 10%;
+        }
     </style>
 </head>
 
@@ -110,7 +188,20 @@
             <div id="history"> </div>
         </div>
         <div id="mapdiv"></div>
+        
     </div>
+
+
+    <input type="checkbox" id="popup-switch" />
+    <div id="popup-background"></div>
+    <div id="popup-box">
+        <div id="popup-content">
+            <div id="winner">playernameの勝利!</div>
+            <img src="../images/players/blue.png" id="winner_icon">
+            <label for="popup-switch" id="popup-close">閉じる</label>
+        </div>
+    </div>
+
 
     <script>
         let url = new URL(window.location.href);
@@ -276,6 +367,10 @@
 
         let turn = 0;
         let turndisplay = document.getElementById("turn");
+        let winnerdisplay = document.getElementById("winner");
+        let switchwinnerdisplay = document.getElementById("popup-switch");
+        let winnericon = document.getElementById("winner_icon");
+        let winconpath = ["../images/winnericon/red.png", "../images/winnericon/blue.png", "../images/winnericon/green.png", "../images/winnericon/yellow.png"];
         let history = document.getElementById("history");
         let diceicon = document.getElementById("dice_icon");
         let diconpath = ["../images/dices/dice_1.png", "../images/dices/dice_2.png", "../images/dices/dice_3.png", "../images/dices/dice_4.png", "../images/dices/dice_5.png", "../images/dices/dice_6.png"]
@@ -297,6 +392,9 @@
                 map.setView([c[1], c[0]]);
                 if (pos[turn] > mapdata.mapsize) {
                     history.innerHTML += "プレイヤー" + (turn + 1) + "がゴールしました。<br>";
+                    winnerdisplay.innerHTML = "プレイヤー" + (turn + 1) + "の勝利！ <br>";
+                    winnericon.src = winconpath[turn];
+                    switchwinnerdisplay.checked = true;
                     break;
                 }
                 await sleep(1500);
