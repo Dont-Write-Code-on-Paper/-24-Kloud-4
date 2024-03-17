@@ -101,21 +101,45 @@
             margin-right: 5px;
         }
 
-        #dice_icon,
-        #dice_button {
-            width: 50%;
-        }
-
+        
         #turn {
             font-family: "M PLUS Rounded 1c", sans-serif;
             text-align: center;
             color: red;
             font-size: 30px;
         }
-
-        #column {
+        
+        #column,
+        #dice_info {
             display: flex;
             justify-content: space-between;
+        }
+        
+        #dice_roll {
+            flex-basis: 50%;
+        }
+        
+        #dice_icon,
+        #dice_button {
+            width: 100%;
+        }
+
+        #dice_count {
+            flex-basis: 50%;
+            font-family: "M PLUS Rounded 1c", sans-serif;
+            text-align: center;
+            color: red;
+        }
+
+        #dice_count_number {
+            height: 10vh;
+            width: 7vw;
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        #dice_count_string {
+            font-size: 12px;
         }
 
         #dicebutton {
@@ -219,8 +243,16 @@
                     <div id="remdisplay-green">プレイヤー3 残り<span class="rem" id="greenrem">3</span>マス</div>
                     <div id="remdisplay-orange">プレイヤー4 残り<span class="rem" id="orangerem">4</span>マス</div>
                 </div>
-                <img src="../images/dices/dice_1.png" id="dice_icon">
-                <button onclick="diceroll()" id="dice_button">ダイスを振る</button>
+                <div id="dice_info"> 
+                    <div id="dice_roll">
+                        <img src="../images/dices/dice_1.png" id="dice_icon">
+                        <button onclick="diceroll()" id="dice_button">ダイスを振る</button>
+                    </div>
+                    <div id="dice_count">
+                        <div id="dice_count_number">-</div>
+                        <div id="dice_count_string">マス進む</div>
+                    </div>
+                </div>
             </div>
             <div id="history">
             </div>
@@ -420,6 +452,8 @@
         let history = document.getElementById("history");
         let diceicon = document.getElementById("dice_icon");
         let diconpath = ["../images/dices/dice_1.png", "../images/dices/dice_2.png", "../images/dices/dice_3.png", "../images/dices/dice_4.png", "../images/dices/dice_5.png", "../images/dices/dice_6.png"]
+        let stepcolor = document.getElementById("dice_count");
+        let stepnum = document.getElementById("dice_count_number");
         mapdata.map.push(mapdata.goal);
         async function diceroll(e) {
             for (let i = 0; i < 10; i++) {
@@ -429,6 +463,8 @@
 
             let n = Math.floor(Math.random() * 6) + 1
             history.innerHTML += "プレイヤー" + (turn + 1) + "が" + n + "を出しました。<br>";
+            stepcolor.style.color = playerscolor[turn];
+            stepnum.innerHTML = n;
             diceicon.src = diconpath[n - 1];
             await sleep(500);
 
@@ -442,6 +478,7 @@
                     geometry: { "type": "Point", "coordinates": c },
                     properties: {}
                 })
+                stepnum.innerHTML = n-i;
                 map.setView([c[1], c[0]]);
                 if (pos[turn] > mapdata.map.length - 1) {
                     history.innerHTML += "プレイヤー" + (turn + 1) + "がゴールしました。<br>";
